@@ -17,9 +17,9 @@ if ($connection && $connection->connect_error) {
 };
 
 // prelevo i dati dal form
-if (!empty($_POST['inputusername']) && !empty($_POST['inputpassword'])) {
-  $username = $_POST['inputusername'];
-  $password = $_POST['inputpassword'];
+if (!empty($_POST['in-name']) && !empty($_POST['in-password'])) {
+  $username = $_POST['in-name'];
+  $password = $_POST['in-password'];
   $ashed_password = md5($password);
 
   $sql = "INSERT INTO `users` (`ID`, `username`, `password`) VALUES (NULL, '$username', '$ashed_password')";
@@ -58,11 +58,11 @@ $connection->close();
         <form class="row g-3" action="subscribe.php" method="POST">
           <div class="col-md-6">
             <label for="inputUsername" class="form-label">username</label>
-            <input type="text" class="form-control" id="in-name" name="inputusername">
+            <input type="text" class="form-control" id="in-name" name="in-name">
           </div>
           <div class="col-md-6">
             <label for="inputPassword" class="form-label">password</label>
-            <input type="password" class="form-control" id="in-password" name="inputpassword">
+            <input type="password" class="form-control" id="in-password" name="in-password">
           </div>
           <div class="col-12 text-center">
             <button type="submit" class="btn btn-primary">Sign in</button>

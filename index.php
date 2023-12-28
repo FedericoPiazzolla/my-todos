@@ -27,11 +27,23 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
   login($_POST['username'], $_POST['password'], $connection);
 };
 
-// query di visualizzazione del contenuto
-$sql = "SELECT `id`, `nome_todo`, `status`, `user_id`  FROM `todo_list`";
-$result = $connection->query($sql);
+// query di visualizzazione del contenuto (privato per user_id)
+if (isset($_SESSION['user_id'])) {
+  $user_id = $_SESSION['user_id'];
+  $sql = "SELECT `id`, `nome_todo`, `status`, `user_id`  FROM `todo_list` WHERE `user_id` = '$user_id'";
+  $result = $connection->query($sql);
+};
+
 
 // inserisco il nuovo todo
+if (!empty($_POST['newtodo'])) {
+  $new_todo = $_POST['newtodo'];
+
+  $query = "INSERT INTO `todo_list` (`id`, `nome_todo`, `status`, `user_id`) VALUES (NULL, '$new_todo', '0', '$user_id')";
+  $connection->query($query);
+
+  header("Location: index.php?newTodo=success");
+};
 
 $connection->close();
 ?>
@@ -51,64 +63,82 @@ $connection->close();
 
   <div class="container my-5">
 
-    <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
-    <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
+  <?php include_once __DIR__ . "/logout.php" ?>
+  
+    <form action="logout.php" method="POST">
+      <input type="hidden" type="text" value="1" name="logout">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
 
-      <?php if ($result && $result->num_rows > 0) { ?>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">id</th>
-              <th scope="col">todos</th>
-              <th scope="col">status</th>
-              <th scope="col">user_id</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- ciclo while per mostrare gli elementi del db in una tabella -->
-            <?php while ($row = $result->fetch_assoc()) { ?>
+      <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
+      <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
+
+        <?php if ($result && $result->num_rows > 0) { ?>
+          <table class="table">
+            <thead>
               <tr>
-                <th scope="row"><?php echo $row['id'] ?></th>
-                <td><?php echo $row['nome_todo'] ?></td>
-                <td><?php echo $row['status'] ?></td>
-                <td><?php echo $row['user_id'] ?></td>
+                <th scope="col">id</th>
+                <th scope="col">todos</th>
+                <th scope="col">status</th>
+                <th scope="col">user_id</th>
               </tr>
-              </tr>
-          </tbody>
-        <?php } ?>
-        </table>
+            </thead>
+            <tbody>
+              <!-- ciclo while per mostrare gli elementi del db in una tabella -->
+              <?php while ($row = $result->fetch_assoc()) { ?>
+                <tr>
+                  <th scope="row"><?php echo $row['id'] ?></th>
+                  <td><?php echo $row['nome_todo'] ?></td>
+                  <td><?php echo $row['status'] ?></td>
+                  <td><?php echo $row['user_id'] ?></td>
+                </tr>
+                </tr>
+            </tbody>
+          <?php } ?>
+          </table>
 
-              <!-- ADD NEW TODO -->
-              <h2 class="text-center">NEW TO-DO</h2>
+          <!-- ADD NEW TODO -->
+          <h2 class="text-center">NEW TO-DO</h2>
+
+          <form class="row g-3 align-items-end" action="index.php" method="POST">
+            <div class="col-10">
+              <label for="inputNewTodo" class="form-label">New To-Do</label>
+              <input type="text" class="form-control" id="newtodo" name="newtodo">
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn btn-primary">ADD</button>
+            </div>
+          </form>
+
+        <?php } ?>
+
+
+      <?php } else { ?>
+
+        <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
+        <h2 class="text-center">LOGIN</h2>
+
+        <div class="card w-50 mx-auto">
+          <div class="card-body">
+            <form action="index.php" method="POST">
+
+              <div class="mb-3">
+                <label for="name" class="form-label">Username</label>
+                <input type="text" class="form-control" id="name" name="username">
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Invia</buttn>
+            </form>
+          </div>
+          <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
+        </div>
 
       <?php } ?>
-
-
-    <?php } else { ?>
-      <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
-      <h2 class="text-center">LOGIN</h2>
-
-      <div class="card w-50 mx-auto">
-        <div class="card-body">
-          <form action="index.php" method="POST">
-
-            <div class="mb-3">
-              <label for="name" class="form-label">Username</label>
-              <input type="text" class="form-control" id="name" name="username">
-            </div>
-
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Invia</buttn>
-          </form>
-        </div>
-        <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
-      </div>
-
-    <?php } ?>
 
   </div>
 
