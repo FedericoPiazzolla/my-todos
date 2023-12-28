@@ -1,4 +1,11 @@
 <?php
+require_once __DIR__ . "/login.php";
+
+// creo una sessione per il login
+if (!isset($_SESSION)) {
+  session_start();
+};
+
 // Collegamento al mysql
 define("DB_SERVER", "localhost:8889");
 define("DB_USERNAME", "root");
@@ -15,8 +22,13 @@ if ($connection && $connection->connect_error) {
   die;
 };
 
+// verifico i dati dell'operazione di login
+if (isset($_POST['username']) && isset($_POST['password'])) {
+  login($_POST['username'], $_POST['password'], $connection);
+};
+
 // query di visualizzazione del contenuto
-$sql = "SELECT `id`, `todo`, `status`, `user_id`  FROM `todos`";
+$sql = "SELECT `id`, `nome_todo`, `status`, `user_id`  FROM `todo_list`";
 $result = $connection->query($sql);
 
 // inserisco il nuovo todo
@@ -57,7 +69,7 @@ $connection->close();
             <?php while ($row = $result->fetch_assoc()) { ?>
               <tr>
                 <th scope="row"><?php echo $row['id'] ?></th>
-                <td><?php echo $row['todo'] ?></td>
+                <td><?php echo $row['nome_todo'] ?></td>
                 <td><?php echo $row['status'] ?></td>
                 <td><?php echo $row['user_id'] ?></td>
               </tr>
@@ -65,6 +77,10 @@ $connection->close();
           </tbody>
         <?php } ?>
         </table>
+
+              <!-- ADD NEW TODO -->
+              <h2 class="text-center">NEW TO-DO</h2>
+
       <?php } ?>
 
 
@@ -89,7 +105,7 @@ $connection->close();
             <button type="submit" class="btn btn-primary">Invia</buttn>
           </form>
         </div>
-        <a href="" class="btn btn-danger">Registrati</a>
+        <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
       </div>
 
     <?php } ?>
