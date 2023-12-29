@@ -45,6 +45,8 @@ if (!empty($_POST['newtodo'])) {
   header("Location: index.php?newTodo=success");
 };
 
+var_dump($_SESSION['user_id']);
+
 $connection->close();
 ?>
 
@@ -124,7 +126,7 @@ $connection->close();
           <form action="index.php" method="POST">
 
             <div class="mb-3">
-              <label for="name" class="form-label">Username</label>
+              <label for="username" class="form-label">Username</label>
               <input type="text" class="form-control" id="username" name="username">
             </div>
 
@@ -133,7 +135,7 @@ $connection->close();
               <input type="password" class="form-control" id="password" name="password">
             </div>
 
-            <button type="submit" class="btn btn-primary">Invia</buttn>
+            <button type="submit" class="btn btn-primary">Invia</button>
           </form>
         </div>
         <a href="./subscribe.php" class="btn btn-danger">Registrati</a>

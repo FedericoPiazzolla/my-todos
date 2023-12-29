@@ -57,11 +57,11 @@ $connection->close();
 
         <form class="row g-3" action="subscribe.php" method="POST">
           <div class="col-md-6">
-            <label for="inputUsername" class="form-label">username</label>
+            <label for="in-name" class="form-label">username</label>
             <input type="text" class="form-control" id="in-name" name="in-name">
           </div>
           <div class="col-md-6">
-            <label for="inputPassword" class="form-label">password</label>
+            <label for="in-password" class="form-label">password</label>
             <input type="password" class="form-control" id="in-password" name="in-password">
           </div>
           <div class="col-12 text-center">

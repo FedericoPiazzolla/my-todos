@@ -20,3 +20,5 @@ function login($username, $password, $connection) {
     echo 'ERRORE NEL LOGIN';
   };
 }
+
+?>
