@@ -30,7 +30,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 // query di visualizzazione del contenuto (privato per user_id)
 if (isset($_SESSION['user_id'])) {
   $user_id = $_SESSION['user_id'];
-  $sql = "SELECT `id`, `nome_todo`, `status`, `user_id`  FROM `todo_list` WHERE `user_id` = '$user_id'";
+  $sql = "SELECT `id`, `nome_todo`, `status`, `user_id` FROM `todo_list` WHERE `user_id` = '$user_id'";
   $results = $connection->query($sql);
 };
 
@@ -45,9 +45,8 @@ if (!empty($_POST['newtodo'])) {
   header("Location: index.php?newTodo=success");
 };
 
-var_dump($_SESSION['user_id']);
-
 $connection->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +68,7 @@ $connection->close();
     <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
     <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
 
-      <?php if ($results && $results->num_rows > 0) { ?>
+      <?php if ($results && $results->num_rows >= 0) { ?>
         <table class="table">
           <thead>
             <tr>
