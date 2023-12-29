@@ -45,6 +45,15 @@ if (!empty($_POST['newtodo'])) {
   header("Location: index.php?newTodo=success");
 };
 
+// query elimina todo
+if (isset($_POST['delete'])) {
+  $delete_todo = $_POST['delete'];
+
+  $query_delete = "DELETE FROM `todo_list` WHERE `todo_list`.`id` = $delete_todo";
+  $connection->query($query_delete);
+  header("Location: index.php?deleteToDo=success");
+};
+
 $connection->close();
 
 ?>
@@ -57,7 +66,11 @@ $connection->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To-Do-List</title>
 
+  <!-- bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -72,20 +85,23 @@ $connection->close();
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">id</th>
-              <th scope="col">todos</th>
-              <th scope="col">status</th>
+              <th scope="col">To-Do</th>
               <th scope="col">user_id</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <!-- ciclo while per mostrare gli elementi del db in una tabella -->
             <?php while ($row = $results->fetch_assoc()) { ?>
               <tr>
-                <th scope="row"><?php echo $row['id'] ?></th>
                 <td><?php echo $row['nome_todo'] ?></td>
-                <td><?php echo $row['status'] ?></td>
                 <td><?php echo $row['user_id'] ?></td>
+                <td class="text-end">
+                  <form action="index.php" method="POST">
+                    <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </td>
               </tr>
               </tr>
           </tbody>
