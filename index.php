@@ -82,34 +82,24 @@ $connection->close();
     <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
 
       <?php if ($results && $results->num_rows >= 0) { ?>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">To-Do</th>
-              <th scope="col">user_id</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- ciclo while per mostrare gli elementi del db in una tabella -->
-            <?php while ($row = $results->fetch_assoc()) { ?>
-              <tr>
-                <td><?php echo $row['nome_todo'] ?></td>
-                <td><?php echo $row['user_id'] ?></td>
-                <td class="text-end">
-                  <form action="index.php" method="POST">
-                    <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
-                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                  </form>
-                </td>
-              </tr>
-              </tr>
-          </tbody>
-        <?php } ?>
-        </table>
+
+        <!-- ciclo while per mostrare gli elementi del db in una tabella -->
+        <ul class="list-group">
+          <?php while ($row = $results->fetch_assoc()) { ?>
+
+            <li class="list-group-item d-flex justify-content-between">
+              <p><?php echo $row['nome_todo'] ?></p>
+              <p><?php echo $row['user_id'] ?></p>
+              <form action="index.php" method="POST">
+                <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+              </form>
+            </li>
+          <?php } ?>
+        </ul>
 
         <!-- ADD NEW TODO -->
-        <h2 class="text-center">NEW TO-DO</h2>
+        <h2 class="text-center pt-5">NEW TO-DO</h2>
 
         <form class="row g-3 align-items-end" action="index.php" method="POST">
           <div class="col-10">
