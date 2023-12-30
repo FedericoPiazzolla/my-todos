@@ -54,6 +54,16 @@ if (isset($_POST['delete'])) {
   header("Location: index.php?deleteToDo=success");
 };
 
+// query per cambiare status alla li del to do
+if (isset($_POST['toggle_todo'])) {
+  $todoID = $_POST['toggle_todo'];
+
+  // aggiorno lo status
+  $query_status = "UPDATE todo_list SET status = NOT status WHERE id = $todoID";
+  $connection->query($query_status);
+  header("Location: index.php");
+};
+
 $connection->close();
 
 ?>
@@ -87,10 +97,14 @@ $connection->close();
         <ul class="list-group">
           <?php while ($row = $results->fetch_assoc()) { ?>
 
-            <li class="list-group-item d-flex justify-content-between">
-              <p><?php echo $row['nome_todo'] ?></p>
-              <p><?php echo $row['user_id'] ?></p>
-              <form action="index.php" method="POST">
+            <li class="list-group-item d-flex">
+              <form action="index.php" method="POST" class="p-1">
+                <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+              </form>
+              <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) { echo "text-decoration-line-through"; } ?>"><?php echo $row['nome_todo'] ?></p>
+              <p class="p-2"><?php echo $row['user_id'] ?></p>
+              <form action="index.php" method="POST" class="p-2">
                 <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
                 <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
               </form>
