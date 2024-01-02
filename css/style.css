@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+/* header */
+header {
+  height: 80px;
+  padding: 1rem;
+  background-color: blue;
+}
+
+.ms_logo {
+  width: 50px;
+}
+/* ms_container */
+.ms_container {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+/* list section */
+#ms-list_group {
+  width: 50%;
+  background-color: cadetblue;
+  padding: 1rem;
+  height: 100%;
+}
+
+/* new to do section */
+#ms-new_todo {
+  width: 50%;
+  background-color: pink;
+  padding: 1rem;
+  height: 30%;
+}

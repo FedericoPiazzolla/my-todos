@@ -81,12 +81,33 @@ $connection->close();
 
   <!-- fontawesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- my_style -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <?php include_once __DIR__ . "/partials/header.php"; ?>
 
-  <div class="container my-5">
+  <header>
+    <nav class="d-flex justify-content-between ">
+      <div>
+        <img class="ms_logo" src="img/logo.png" alt="">
+      </div>
+      <?php if (!empty($_SESSION['username']) && !empty($_SESSION['user_id'])) { ?>
+      <div class="d-flex me-4 align-items-center">
+        <span class="px-4">Hello <?php echo $_SESSION['username']; ?></span>
+
+        <form action="logout.php" method="POST">
+          <input type="hidden" type="text" value="1" name="logout">
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+      </div>
+    <?php } ?>
+    </nav>
+    
+  </header>
+
+  <div class="container py-5 ms_container">
 
     <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
     <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
@@ -94,36 +115,44 @@ $connection->close();
       <?php if ($results && $results->num_rows >= 0) { ?>
 
         <!-- ciclo while per mostrare gli elementi del db in una tabella -->
-        <ul class="list-group">
-          <?php while ($row = $results->fetch_assoc()) { ?>
+        <section id="ms-list_group">
+          <ul class="list-group">
+            <?php while ($row = $results->fetch_assoc()) { ?>
 
-            <li class="list-group-item d-flex">
-              <form action="index.php" method="POST" class="p-1">
-                <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
-                <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
-              </form>
-              <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) { echo "text-decoration-line-through"; } ?>"><?php echo $row['nome_todo'] ?></p>
-              <p class="p-2"><?php echo $row['user_id'] ?></p>
-              <form action="index.php" method="POST" class="p-2">
-                <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
-                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-              </form>
-            </li>
-          <?php } ?>
-        </ul>
+              <li class="list-group-item d-flex">
+                <form action="index.php" method="POST" class="p-1">
+                  <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                  <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                </form>
+                <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) {
+                                            echo "text-decoration-line-through";
+                                          } ?>"><?php echo $row['nome_todo'] ?></p>
+                <p class="p-2"><?php echo $row['user_id'] ?></p>
+                <form action="index.php" method="POST" class="p-2">
+                  <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                  <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                </form>
+              </li>
+            <?php } ?>
+          </ul>
+        </section>
+
 
         <!-- ADD NEW TODO -->
-        <h2 class="text-center pt-5">NEW TO-DO</h2>
+        <section id="ms-new_todo">
+          <h2 class="text-center pt-5">NEW TO-DO</h2>
 
-        <form class="row g-3 align-items-end" action="index.php" method="POST">
-          <div class="col-10">
-            <label for="inputNewTodo" class="form-label">New To-Do</label>
-            <input type="text" class="form-control" id="newtodo" name="newtodo">
-          </div>
-          <div class="col-2">
-            <button type="submit" class="btn btn-primary">ADD</button>
-          </div>
-        </form>
+          <form class="row g-3 align-items-end" action="index.php" method="POST">
+            <div class="col-10">
+              <label for="inputNewTodo" class="form-label">New To-Do</label>
+              <input type="text" class="form-control" id="newtodo" name="newtodo">
+            </div>
+            <div class="col-2">
+              <button type="submit" class="btn btn-primary">ADD</button>
+            </div>
+          </form>
+        </section>
+
 
       <?php } ?>
 
