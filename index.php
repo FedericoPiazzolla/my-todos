@@ -194,32 +194,36 @@ $connection->close();
       <div class="container">
         <!-- Se arrivo da logout stampo il messagio di comunicazione -->
         <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success') { ?>
-          <div class="alert alert-success">
+          <div class="alert alert-success mb-5 ">
             Logout è avvenuto con successo
           </div>
         <?php } ?>
 
         <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
-        <h2 class="text-center">LOGIN</h2>
+        
 
-        <div class="card w-50 mx-auto">
+        <div class="card w-50 mx-auto position-relative ms_my-card-login">
+          <h2 class="text-center ms_login-title">LOGIN</h2>
           <div class="card-body">
             <form action="index.php" method="POST">
 
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username">
+              <div class="input-group input-group-lg flex-nowrap p-3 my-5">
+                <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-user fa-lg"></i></span>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-wrapping">
               </div>
 
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+              <div class="input-group input-group-lg flex-nowrap p-3 mb-5">
+              <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-lock fa-lg"></i></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" aria-label="Username" aria-describedby="basic-wrapping">
               </div>
 
-              <button type="submit" class="btn btn-primary">Invia</button>
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="m-3 w-100 btn btn-info ms_login-btn">Invia</button>
+              </div>
+              
             </form>
           </div>
-          <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
+          <span class="p-5 text-center text-light">Se non ti sei ancora registrato fallo qui -> <a href="./subscribe.php" class="link-info">Registrati</a></span>
         </div>
 
       <?php } ?>

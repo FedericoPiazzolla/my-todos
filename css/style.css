@@ -7,6 +7,9 @@
 img {
   max-width: 100%;
 }
+body {
+  background-color: #068e99;
+}
 /* header */
 header {
   height: 80px;
@@ -46,4 +49,24 @@ header {
 /* DONE TO DO */
 .ms_done-todo {
   padding: 1rem;
+}
+
+
+/* LOGIN */
+.ms_my-card-login{
+  margin-top: 10rem;
+  background-color: #1d2a4e;
+}
+.ms_login-title {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 40px;
+  background-color: #0ef4e1;
+  border-radius: 2rem;
+}
+
+.ms_login-btn {
+  background-color: #0ef4e1;
 }
