@@ -26,7 +26,6 @@ header {
 /* list section */
 #ms-list_group {
   width: 50%;
-  background-color: cadetblue;
   padding: 1rem;
   height: 100%;
 }
@@ -34,7 +33,13 @@ header {
 /* new to do section */
 #ms-new_todo {
   width: 50%;
-  background-color: pink;
+}
+
+.ms_new-div {
   padding: 1rem;
-  height: 30%;
+}
+
+/* DONE TO DO */
+.ms_done-todo {
+  padding: 1rem;
 }

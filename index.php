@@ -119,50 +119,65 @@ $connection->close();
     <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
 
       <?php if ($results && $results->num_rows >= 0) { ?>
-
-        <!-- ciclo while per mostrare gli elementi del db in una tabella -->
-        <section id="ms-list_group" class="d-flex flex-column justify-content-between">
+        <section id="ms-list_group" class="d-flex flex-column justify-content-between border border-secondary">
           <div>
             <h2 class="text-center pt-5">MY TO-DO'S</h2>
             <ul class="list-group">
+              <?php $results->data_seek(0); ?>
               <?php while ($row = $results->fetch_assoc()) { ?>
-
-                <li class="list-group-item d-flex">
-                  <form action="index.php" method="POST" class="p-1">
-                    <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
-                    <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
-                  </form>
-                  <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) {
-                                              echo "text-decoration-line-through";
-                                            } ?>"><?php echo $row['nome_todo'] ?></p>
-                  <form action="index.php" method="POST" class="p-2">
-                    <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
-                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                  </form>
-                </li>
+                <?php if ($row['status'] == 0) { ?>
+                  <li class="list-group-item d-flex">
+                    <form action="index.php" method="POST" class="p-1">
+                      <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                      <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                    </form>
+                    <p class="p-2 m-0 text-center flex-grow-1"><?php echo $row['nome_todo'] ?></p>
+                  </li>
+                <?php } ?>
               <?php } ?>
             </ul>
           </div>
           <h4 class="text-center alert alert-success"><?php echo $remainingTodos; ?> to-do's left</h4>
-          
         </section>
 
 
         <!-- ADD NEW TODO -->
-        <section id="ms-new_todo">
-          <h2 class="text-center pt-5">NEW TO-DO</h2>
+        <section id="ms-new_todo" class="d-flex flex-column justify-content-between h-100">
+          <div class="h-25 border border-secondary ms_new-div">
+            <h2 class="text-center pt-5">NEW TO-DO</h2>
 
-          <form class="row g-3 align-items-end" action="index.php" method="POST">
-            <div class="col-10">
-              <label for="inputNewTodo" class="form-label">New To-Do</label>
-              <input type="text" class="form-control" id="newtodo" name="newtodo">
-            </div>
-            <div class="col-2">
-              <button type="submit" class="btn btn-primary">ADD</button>
-            </div>
-          </form>
+            <form class="row g-3 align-items-end" action="index.php" method="POST">
+              <div class="col-10">
+                <label for="inputNewTodo" class="form-label"></label>
+                <input type="text" class="form-control" id="newtodo" name="newtodo">
+              </div>
+              <div class="col-2">
+                <button type="submit" class="btn btn-primary">ADD</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- To do's Done -->
+          <div class="ms_done-todo h-75 border border-secondary">
+            <h2 class="text-center pt-5">MY TO-DO'S</h2>
+            <ul class="list-group">
+              <?php $results->data_seek(0); ?>
+              <?php while ($row = $results->fetch_assoc()) { ?>
+                <?php if ($row['status'] == 1) { ?>
+                  <li class="list-group-item d-flex">
+                    <p class="p-2 m-0 flex-grow-1 text-center <?php if ($row['status'] == 1) {
+                                                echo "text-decoration-line-through";
+                                              } ?>"><?php echo $row['nome_todo'] ?></p>
+                    <form action="index.php" method="POST" class="p-1">
+                      <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                      <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                  </li>
+                <?php } ?>
+              <?php } ?>
+            </ul>
+          </div>
         </section>
-
 
       <?php } ?>
 
