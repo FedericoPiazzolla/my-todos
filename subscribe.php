@@ -59,7 +59,7 @@ $connection->close();
       <h2 class="text-center ms_h2-title">SIGN IN</h2>
       <div class="card-body">
 
-        <form class="row g-3" action="subscribe.php" method="POST">
+        <form action="subscribe.php" method="POST">
           <div class="input-group input-group-lg flex-nowrap p-3 my-5">
             <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-user fa-lg"></i></span>
             <input type="text" class="form-control" id="in-name" name="in-name" placeholder="Username" aria-label="Username" aria-describedby="basic-wrapping">
