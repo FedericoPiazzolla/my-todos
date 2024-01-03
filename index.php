@@ -121,7 +121,7 @@ $connection->close();
     <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
 
       <?php if ($results && $results->num_rows >= 0) { ?>
-        <section id="ms-list_group" class="d-flex flex-column justify-content-between border border-secondary">
+        <section id="ms-list_group" class="d-flex flex-column justify-content-between border">
           <div>
             <h2 class="text-center pt-5">MY TO-DO'S</h2>
 
@@ -149,22 +149,19 @@ $connection->close();
 
         <!-- ADD NEW TODO -->
         <section id="ms-new_todo" class="d-flex flex-column justify-content-between h-100">
-          <div class="h-25 border border-secondary ms_new-div">
+          <div class="h-25 border ms_new-div">
             <h2 class="text-center pt-5">NEW TO-DO</h2>
 
-            <form class="row g-3 align-items-end" action="index.php" method="POST">
-              <div class="col-10">
-                <label for="inputNewTodo" class="form-label"></label>
-                <input type="text" class="form-control" id="newtodo" name="newtodo">
-              </div>
-              <div class="col-2">
-                <button type="submit" class="btn btn-primary">ADD</button>
+            <form action="index.php" method="POST">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" id="newtodo" name="newtodo" aria-label="Recipient's username" aria-describedby="button-addon2" placeholder="write a new to-do">
+                <button type="submit" class="btn btn-outline-info" id="button-addon2">ADD</button>
               </div>
             </form>
           </div>
 
           <!-- To do's Done -->
-          <div class="ms_done-todo h-75 border border-secondary ms-scroll">
+          <div class="ms_done-todo h-75 border ms-scroll">
 
             <h2 class="text-center pt-5">TO DO'S DONE</h2>
             <ul class="list-group">
