@@ -213,12 +213,12 @@ $connection->close();
               </div>
 
               <div class="input-group input-group-lg flex-nowrap p-3 mb-5">
-              <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-lock fa-lg"></i></span>
+                <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-lock fa-lg"></i></span>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" aria-label="Username" aria-describedby="basic-wrapping">
               </div>
 
               <div class="d-flex justify-content-center">
-                <button type="submit" class="m-3 w-100 btn btn-info ms_login-btn">Invia</button>
+                <button type="submit" class="m-3 w-100 btn btn-info ms_login-btn">LOGIN</button>
               </div>
               
             </form>
