@@ -9,12 +9,14 @@ img {
 }
 
 body {
+  background:#068e99;
+  background: linear-gradient(to bottom, #1F2C50, #068e99);
   height: 100vh;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #068e99;
+  
 }
 
 /* card */
