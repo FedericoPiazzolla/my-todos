@@ -28,8 +28,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 };
 
 // query di visualizzazione del contenuto (privato per user_id)
-if (isset($_SESSION['user_id'])) {
-  $user_id = $_SESSION['user_id'];
+
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+if ($user_id !== null) {
   $sql = "SELECT `id`, `nome_todo`, `status`, `user_id` FROM `todo_list` WHERE `user_id` = '$user_id'";
   $results = $connection->query($sql);
 };
@@ -93,25 +94,26 @@ $connection->close();
 </head>
 
 <body>
+  <?php if (!empty($_SESSION['username']) && !empty($_SESSION['user_id'])) { ?>
+    <header>
+      <nav class="d-flex justify-content-between ">
 
-  <header>
-    <nav class="d-flex justify-content-between ">
-      <div>
-        <img class="ms_logo" src="img/logo.png" alt="">
-      </div>
-      <?php if (!empty($_SESSION['username']) && !empty($_SESSION['user_id'])) { ?>
+        <div>
+          <img class="ms_logo" src="img/logo.png" alt="">
+        </div>
+
         <div class="d-flex me-4 align-items-center">
-          <span class="px-4">Hello <?php echo $_SESSION['username']; ?></span>
+          <span class="px-4">Ciao <?php echo $_SESSION['username']; ?></span>
 
           <form action="logout.php" method="POST">
             <input type="hidden" type="text" value="1" name="logout">
             <button type="submit" class="btn btn-danger">Logout</button>
           </form>
         </div>
-      <?php } ?>
-    </nav>
 
-  </header>
+      </nav>
+    </header>
+  <?php } ?>
 
   <div class="container py-5 ms_container">
 
@@ -122,22 +124,26 @@ $connection->close();
         <section id="ms-list_group" class="d-flex flex-column justify-content-between border border-secondary">
           <div>
             <h2 class="text-center pt-5">MY TO-DO'S</h2>
-            <ul class="list-group">
-              <?php $results->data_seek(0); ?>
-              <?php while ($row = $results->fetch_assoc()) { ?>
-                <?php if ($row['status'] == 0) { ?>
-                  <li class="list-group-item d-flex">
-                    <form action="index.php" method="POST" class="p-1">
-                      <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
-                      <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
-                    </form>
-                    <p class="p-2 m-0 text-center flex-grow-1"><?php echo $row['nome_todo'] ?></p>
-                  </li>
+
+            <div class="ms-scroll">
+              <ul class="list-group ">
+                <?php $results->data_seek(0); ?>
+                <?php while ($row = $results->fetch_assoc()) { ?>
+                  <?php if ($row['status'] == 0) { ?>
+                    <li class="list-group-item d-flex">
+                      <form action="index.php" method="POST" class="p-1">
+                        <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                        <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                      </form>
+                      <p class="p-2 m-0 text-center flex-grow-1"><?php echo $row['nome_todo'] ?></p>
+                    </li>
+                  <?php } ?>
                 <?php } ?>
-              <?php } ?>
-            </ul>
+              </ul>
+            </div>
+
           </div>
-          <h4 class="text-center alert alert-success"><?php echo $remainingTodos; ?> to-do's left</h4>
+          <h4 class="text-center alert alert-info"><?php echo $remainingTodos; ?> to-do's left</h4>
         </section>
 
 
@@ -158,16 +164,17 @@ $connection->close();
           </div>
 
           <!-- To do's Done -->
-          <div class="ms_done-todo h-75 border border-secondary">
-            <h2 class="text-center pt-5">MY TO-DO'S</h2>
+          <div class="ms_done-todo h-75 border border-secondary ms-scroll">
+
+            <h2 class="text-center pt-5">TO DO'S DONE</h2>
             <ul class="list-group">
               <?php $results->data_seek(0); ?>
               <?php while ($row = $results->fetch_assoc()) { ?>
                 <?php if ($row['status'] == 1) { ?>
                   <li class="list-group-item d-flex">
                     <p class="p-2 m-0 flex-grow-1 text-center <?php if ($row['status'] == 1) {
-                                                echo "text-decoration-line-through";
-                                              } ?>"><?php echo $row['nome_todo'] ?></p>
+                                                                echo "text-decoration-line-through";
+                                                              } ?>"><?php echo $row['nome_todo'] ?></p>
                     <form action="index.php" method="POST" class="p-1">
                       <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
                       <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
@@ -184,37 +191,40 @@ $connection->close();
 
     <?php } else { ?>
 
-      <!-- Se arrivo da logout stampo il messagio di comunicazione -->
-      <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success') { ?>
-        <div class="alert alert-success">
-          Logout è avvenuto con successo
+      <div class="container">
+        <!-- Se arrivo da logout stampo il messagio di comunicazione -->
+        <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success') { ?>
+          <div class="alert alert-success">
+            Logout è avvenuto con successo
+          </div>
+        <?php } ?>
+
+        <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
+        <h2 class="text-center">LOGIN</h2>
+
+        <div class="card w-50 mx-auto">
+          <div class="card-body">
+            <form action="index.php" method="POST">
+
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username">
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+
+              <button type="submit" class="btn btn-primary">Invia</button>
+            </form>
+          </div>
+          <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
         </div>
+
       <?php } ?>
-
-      <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
-      <h2 class="text-center">LOGIN</h2>
-
-      <div class="card w-50 mx-auto">
-        <div class="card-body">
-          <form action="index.php" method="POST">
-
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username">
-            </div>
-
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Invia</button>
-          </form>
-        </div>
-        <a href="./subscribe.php" class="btn btn-danger">Registrati</a>
       </div>
 
-    <?php } ?>
 
   </div>
 

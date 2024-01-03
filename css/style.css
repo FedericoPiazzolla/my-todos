@@ -11,7 +11,11 @@ img {
 header {
   height: 80px;
   padding: 1rem;
-  background-color: blue;
+  background-color: lightblue;
+}
+
+.ms-scroll {
+  overflow-y: auto;
 }
 
 .ms_logo {
