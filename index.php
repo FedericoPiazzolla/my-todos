@@ -64,6 +64,12 @@ if (isset($_POST['toggle_todo'])) {
   header("Location: index.php");
 };
 
+// Calcola il numero di To-Do rimanenti direttamente nella query
+$sqlRemaining = "SELECT COUNT(*) AS remaining_todos FROM `todo_list` WHERE `user_id` = '$user_id' AND `status` = 0";
+$resultRemaining = $connection->query($sqlRemaining);
+$rowRemaining = $resultRemaining->fetch_assoc();
+$remainingTodos = ($rowRemaining) ? $rowRemaining['remaining_todos'] : 0;
+
 $connection->close();
 
 ?>
@@ -94,17 +100,17 @@ $connection->close();
         <img class="ms_logo" src="img/logo.png" alt="">
       </div>
       <?php if (!empty($_SESSION['username']) && !empty($_SESSION['user_id'])) { ?>
-      <div class="d-flex me-4 align-items-center">
-        <span class="px-4">Hello <?php echo $_SESSION['username']; ?></span>
+        <div class="d-flex me-4 align-items-center">
+          <span class="px-4">Hello <?php echo $_SESSION['username']; ?></span>
 
-        <form action="logout.php" method="POST">
-          <input type="hidden" type="text" value="1" name="logout">
-          <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
-      </div>
-    <?php } ?>
+          <form action="logout.php" method="POST">
+            <input type="hidden" type="text" value="1" name="logout">
+            <button type="submit" class="btn btn-danger">Logout</button>
+          </form>
+        </div>
+      <?php } ?>
     </nav>
-    
+
   </header>
 
   <div class="container py-5 ms_container">
@@ -115,26 +121,30 @@ $connection->close();
       <?php if ($results && $results->num_rows >= 0) { ?>
 
         <!-- ciclo while per mostrare gli elementi del db in una tabella -->
-        <section id="ms-list_group">
-          <ul class="list-group">
-            <?php while ($row = $results->fetch_assoc()) { ?>
+        <section id="ms-list_group" class="d-flex flex-column justify-content-between">
+          <div>
+            <h2 class="text-center pt-5">MY TO-DO'S</h2>
+            <ul class="list-group">
+              <?php while ($row = $results->fetch_assoc()) { ?>
 
-              <li class="list-group-item d-flex">
-                <form action="index.php" method="POST" class="p-1">
-                  <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
-                  <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
-                </form>
-                <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) {
-                                            echo "text-decoration-line-through";
-                                          } ?>"><?php echo $row['nome_todo'] ?></p>
-                <p class="p-2"><?php echo $row['user_id'] ?></p>
-                <form action="index.php" method="POST" class="p-2">
-                  <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
-                  <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                </form>
-              </li>
-            <?php } ?>
-          </ul>
+                <li class="list-group-item d-flex">
+                  <form action="index.php" method="POST" class="p-1">
+                    <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                    <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                  </form>
+                  <p class="p-2 flex-grow-1 <?php if ($row['status'] == 1) {
+                                              echo "text-decoration-line-through";
+                                            } ?>"><?php echo $row['nome_todo'] ?></p>
+                  <form action="index.php" method="POST" class="p-2">
+                    <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                  </form>
+                </li>
+              <?php } ?>
+            </ul>
+          </div>
+          <h4 class="text-center alert alert-success"><?php echo $remainingTodos; ?> to-do's left</h4>
+          
         </section>
 
 
