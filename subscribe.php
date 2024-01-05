@@ -76,8 +76,8 @@ $connection->close();
       </div>
 
     </div>
-
   </div>
+
 </body>
 
 </html>

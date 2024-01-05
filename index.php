@@ -116,117 +116,118 @@ $connection->close();
   <?php } ?>
 
   <div class="container py-5 ms_container">
+    <div class="wrapper d-flex align-items-center justify-content-center h-100">
 
-    <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
-    <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
+      <!-- verifico de l'utente è loggato correttamente, user_id e username siano corretti -->
+      <?php if (!empty($_SESSION['user_id']) && !empty($_SESSION['username'])) { ?>
 
-      <?php if ($results && $results->num_rows >= 0) { ?>
-        <section id="ms-list_group" class="d-flex flex-column justify-content-between border">
-          <div>
-            <h2 class="text-center pt-5">MY TO-DO'S</h2>
+        <?php if ($results && $results->num_rows >= 0) { ?>
+          <section id="ms-list_group" class="d-flex flex-column justify-content-between border">
+            <div>
+              <h2 class="text-center pt-5">MY TO-DO'S</h2>
 
-            <div class="ms-scroll">
-              <ul class="list-group ">
+              <div class="ms-scroll">
+                <ul class="list-group ">
+                  <?php $results->data_seek(0); ?>
+                  <?php while ($row = $results->fetch_assoc()) { ?>
+                    <?php if ($row['status'] == 0) { ?>
+                      <li class="list-group-item d-flex">
+                        <form action="index.php" method="POST" class="p-1">
+                          <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
+                          <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                        </form>
+                        <p class="p-2 m-0 text-center flex-grow-1"><?php echo $row['nome_todo'] ?></p>
+                      </li>
+                    <?php } ?>
+                  <?php } ?>
+                </ul>
+              </div>
+
+            </div>
+            <h4 class="text-center alert alert-info"><?php echo $remainingTodos; ?> to-do's left</h4>
+          </section>
+
+
+          <!-- ADD NEW TODO -->
+          <section id="ms-new_todo" class="d-flex flex-column justify-content-between h-100">
+            <div class="h-25 border ms_new-div">
+              <h2 class="text-center pt-5">NEW TO-DO</h2>
+
+              <form action="index.php" method="POST">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" id="newtodo" name="newtodo" aria-label="Recipient's username" aria-describedby="button-addon2" placeholder="write a new to-do">
+                  <button type="submit" class="btn btn-outline-info" id="button-addon2">ADD</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- To do's Done -->
+            <div class="ms_done-todo h-75 border ms-scroll">
+
+              <h2 class="text-center pt-5">TO DO'S DONE</h2>
+              <ul class="list-group">
                 <?php $results->data_seek(0); ?>
                 <?php while ($row = $results->fetch_assoc()) { ?>
-                  <?php if ($row['status'] == 0) { ?>
+                  <?php if ($row['status'] == 1) { ?>
                     <li class="list-group-item d-flex">
+                      <p class="p-2 m-0 flex-grow-1 text-center <?php if ($row['status'] == 1) {
+                                                                  echo "text-decoration-line-through";
+                                                                } ?>"><?php echo $row['nome_todo'] ?></p>
                       <form action="index.php" method="POST" class="p-1">
-                        <input type="hidden" name="toggle_todo" value="<?php echo $row['id']; ?>">
-                        <button type="submit" class="btn btn-outline-secondary border-0"><i class="fa-regular fa-circle-check"></i></button>
+                        <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
                       </form>
-                      <p class="p-2 m-0 text-center flex-grow-1"><?php echo $row['nome_todo'] ?></p>
                     </li>
                   <?php } ?>
                 <?php } ?>
               </ul>
             </div>
+          </section>
 
-          </div>
-          <h4 class="text-center alert alert-info"><?php echo $remainingTodos; ?> to-do's left</h4>
-        </section>
-
-
-        <!-- ADD NEW TODO -->
-        <section id="ms-new_todo" class="d-flex flex-column justify-content-between h-100">
-          <div class="h-25 border ms_new-div">
-            <h2 class="text-center pt-5">NEW TO-DO</h2>
-
-            <form action="index.php" method="POST">
-              <div class="input-group mb-3">
-                <input type="text" class="form-control" id="newtodo" name="newtodo" aria-label="Recipient's username" aria-describedby="button-addon2" placeholder="write a new to-do">
-                <button type="submit" class="btn btn-outline-info" id="button-addon2">ADD</button>
-              </div>
-            </form>
-          </div>
-
-          <!-- To do's Done -->
-          <div class="ms_done-todo h-75 border ms-scroll">
-
-            <h2 class="text-center pt-5">TO DO'S DONE</h2>
-            <ul class="list-group">
-              <?php $results->data_seek(0); ?>
-              <?php while ($row = $results->fetch_assoc()) { ?>
-                <?php if ($row['status'] == 1) { ?>
-                  <li class="list-group-item d-flex">
-                    <p class="p-2 m-0 flex-grow-1 text-center <?php if ($row['status'] == 1) {
-                                                                echo "text-decoration-line-through";
-                                                              } ?>"><?php echo $row['nome_todo'] ?></p>
-                    <form action="index.php" method="POST" class="p-1">
-                      <input type="hidden" type="text" value="<?php echo $row['id'] ?>" name="delete">
-                      <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                    </form>
-                  </li>
-                <?php } ?>
-              <?php } ?>
-            </ul>
-          </div>
-        </section>
-
-      <?php } ?>
-
-
-    <?php } else { ?>
-
-      <div class="container">
-        <!-- Se arrivo da logout stampo il messagio di comunicazione -->
-        <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success') { ?>
-          <div class="alert alert-success mb-5 ">
-            Logout è avvenuto con successo
-          </div>
         <?php } ?>
 
-        <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
-        
 
-        <div class="card w-50 mx-auto position-relative ms_my-card-login">
-          <h2 class="text-center ms_login-title">LOGIN</h2>
-          <div class="card-body">
-            <form action="index.php" method="POST">
+      <?php } else { ?>
 
-              <div class="input-group input-group-lg flex-nowrap p-3 my-5">
-                <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-user fa-lg"></i></span>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-wrapping">
-              </div>
+        <div class="container">
+          <!-- Se arrivo da logout stampo il messagio di comunicazione -->
+          <?php if (isset($_GET['logout']) && $_GET['logout'] === 'success') { ?>
+            <div class="alert alert-success mb-5 ">
+              Logout è avvenuto con successo
+            </div>
+          <?php } ?>
 
-              <div class="input-group input-group-lg flex-nowrap p-3 mb-5">
-                <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-lock fa-lg"></i></span>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" aria-label="Username" aria-describedby="basic-wrapping">
-              </div>
+          <!-- se l'utente non ha effettuato il login, dovra compilare i campi e registrarsi  -->
 
-              <div class="d-flex justify-content-center">
-                <button type="submit" class="m-3 w-100 btn btn-info ms_login-btn">LOGIN</button>
-              </div>
-              
-            </form>
+
+          <div class="card w-50 mx-auto position-relative ms_my-card-login">
+            <h2 class="text-center ms_login-title">LOGIN</h2>
+            <div class="card-body">
+              <form action="index.php" method="POST">
+
+                <div class="input-group input-group-lg flex-nowrap p-3 my-5">
+                  <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-user fa-lg"></i></span>
+                  <input type="text" class="form-control" id="username" name="username" placeholder="Username" aria-label="Username" aria-describedby="basic-wrapping">
+                </div>
+
+                <div class="input-group input-group-lg flex-nowrap p-3 mb-5">
+                  <span class="input-group-text" id="basic-wrapping"><i class="fa-solid fa-lock fa-lg"></i></span>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password" aria-label="Username" aria-describedby="basic-wrapping">
+                </div>
+
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="m-3 w-100 btn btn-info ms_login-btn">LOGIN</button>
+                </div>
+
+              </form>
+            </div>
+            <span class="p-5 text-center text-light">Se non ti sei ancora registrato fallo qui -> <a href="./subscribe.php" class="link-info">Registrati</a></span>
           </div>
-          <span class="p-5 text-center text-light">Se non ti sei ancora registrato fallo qui -> <a href="./subscribe.php" class="link-info">Registrati</a></span>
+
+        <?php } ?>
         </div>
 
-      <?php } ?>
-      </div>
-
-
+    </div>
   </div>
 
 </body>
